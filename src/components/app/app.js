@@ -69,10 +69,23 @@ class App extends Component {
     })
   }
 
+  filterData = (data, filter) => {
+    switch(filter) {
+      case 'to-increase':
+        return data.filter(item => item.increase === true);
+      case 'more1000':
+        return data.filter(item => item.salary > 1000);
+      case 'favourite':
+        return data.filter(item => item.favourite === true);
+      default:
+        return data;
+    }
+  }
+
 
   render() {
-    let {data, term} = this.state;
-    const visibleData = this.onSearch(data, term)
+    let {data, term, filter} = this.state;
+    const visibleData = this.filterData(this.onSearch(data, term), filter)    
 
     return (
       <div className="app">
@@ -80,7 +93,7 @@ class App extends Component {
   
           <div className="search-panel">
               <SearchPanel  onSearchUpdate={this.onSearchUpdate}/>
-              <AppFilter onFilterUpdate={this.onFilterUpdate}/>
+              <AppFilter filter={filter} onFilterUpdate={this.onFilterUpdate}/>
           </div>
           
           <EmployeesList  data={visibleData}

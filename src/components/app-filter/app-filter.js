@@ -2,45 +2,41 @@ import { Component } from "react";
 import "./app-filter.css";
 
 class AppFilter extends Component {
-    state = {
-        filter: "all"
-    }
+
 
     onSelectedFilter = (event) => {
-        const target = event.target;
-        const dataAtr = target.dataset.filter;
-        if (target.classList.contain = 'button') {
-            this.setState({
-                filter: dataAtr
-            })
+        const dataAtr = event.target.dataset.filter;
+        if (event.target.classList.contains('btn')) {
+            this.props.onFilterUpdate(dataAtr)
         }
-        this.props.onFilterUpdate(this.state.filter)
     }
 
 
     render() {
+        const {filter} = this.props;
+
         const buttons = [
             {title: "Все сотрудники" , dataAtr: "all"},
             {title: "На повышение" , dataAtr: "to-increase"},
-            {title: " З/П больше 1000$" , dataAtr: "more1000"}
-        ]
+            {title: "З/П больше 1000$" , dataAtr: "more1000"},
+            {title: "Избранные" , dataAtr: "favourite"},
+        ];
+
         const buttonsPanel = buttons.map((item,i) => {
-            let classList;
-            if (item.dataAtr == this.state.filter) {
-                classList = 'btn btn-light'
-            } else {
-                classList = "btn btn-outline-light"
-            }
+            const active = filter === item.dataAtr;
+            const clazz = active ? 'btn btn-light' : "btn btn-outline-light";
+           
 
             return (
                 <button type="button"
                 data-filter={item.dataAtr}
-                className={classList}
+                className={clazz}
                 key={i}>
                 {item.title}
                 </button>
             )
         })
+
 
         return (
             <div onClick={this.onSelectedFilter} className="btn-group">
