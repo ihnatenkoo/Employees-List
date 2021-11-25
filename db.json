@@ -1,0 +1,46 @@
+{
+  "data": [
+    {
+      "name": "Dmytro Ihnatenko",
+      "salary": "7777",
+      "favourite": true,
+      "increase": true,
+      "id": 1
+    },
+    {
+      "name": "Andrey Zhygarev",
+      "salary": "7777",
+      "favourite": true,
+      "increase": true,
+      "id": 2
+    },
+    {
+      "name": "Sergey",
+      "salary": "780",
+      "favourite": true,
+      "increase": false,
+      "id": 3
+    },
+    {
+      "name": "Kate",
+      "salary": "725",
+      "favourite": false,
+      "increase": false,
+      "id": 4
+    },
+    {
+      "name": "Alex",
+      "salary": "750",
+      "favourite": false,
+      "increase": false,
+      "id": 5
+    },
+    {
+      "name": "Nikolay",
+      "salary": "826",
+      "favourite": false,
+      "increase": false,
+      "id": 6
+    }
+  ]
+}
