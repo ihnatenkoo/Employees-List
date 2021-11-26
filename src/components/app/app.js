@@ -28,7 +28,6 @@ class App extends Component {
     this.setState({
         data
     })
-    console.log(data)
   }
 
   onAddPerson = async (data) => {
@@ -45,6 +44,7 @@ class App extends Component {
       await this.service.updateData(data, "PUT", id);
       await this.getData();
   }
+
 
   // ПОИСК ФИЛЬТРОВКА
   onSearchUpdate = (term) => {
@@ -72,11 +72,11 @@ class App extends Component {
   filterData = (data, filter) => {
     switch(filter) {
       case 'to-increase':
-        return data.filter(item => item.increase === true);
+        return data.filter(item => item.increase);
       case 'more1000':
         return data.filter(item => item.salary > 1000);
       case 'favourite':
-        return data.filter(item => item.favourite === true);
+        return data.filter(item => item.favourite);
       default:
         return data;
     }
@@ -85,11 +85,11 @@ class App extends Component {
 
   render() {
     let {data, term, filter} = this.state;
-    const visibleData = this.filterData(this.onSearch(data, term), filter)    
+    const visibleData = this.filterData(this.onSearch(data, term), filter);
 
     return (
       <div className="app">
-          <AppInfo />
+          <AppInfo data={data}/>
   
           <div className="search-panel">
               <SearchPanel  onSearchUpdate={this.onSearchUpdate}/>
