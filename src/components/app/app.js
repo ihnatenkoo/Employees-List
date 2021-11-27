@@ -10,10 +10,17 @@ import './app.css';
 
 class App extends Component {
 
+  // Тут лучше добавить в состояние какое-то поле, типа isFetching
+  // при старте оно false, после завершения запроса this.getData() - тоже false
+  // но при каждом вызове this.getData() оно должно переключаться в true, а потом - в false
+  // при true можно выводить какой-то спиннер или просто писать что-то вроде Loading...
+  // на таком сервере время ожидания очень маленькое,
+  // но если медленный интернет и тд - пользователь понимает что что-то происходит
   state = {
     data: [],
     term: "",
-    filter: "all"
+    filter: "all",
+    isFetching: false,
   }
 
   service = new Service();
@@ -24,15 +31,40 @@ class App extends Component {
 
   // ДОБАВЛЕНИЕ УДАЛЕНИЕ ИЗМЕНЕНИЕ
   getData = async () => {
-    const data = await this.service.fetch();
     this.setState({
-        data
+      isFetching: true,
     })
+
+    const data = await this.service.fetch();
+
+    if (data) {
+      this.setState({
+          data,
+          isFetching: false,
+      });
+    } else {
+      // Обрабатываем падение сервера
+      this.setState({
+        data: [],
+        isFetching: false,
+      });
+
+      console.log('Запрос на получение данных не сработал.');
+    }
   }
 
   onAddPerson = async (data) => {
-      await this.service.updateData(data,"POST","");
-      await this.getData();
+      const response = await this.service.updateData(data,"POST","");
+
+      // Если во время запроса падает сервер - нужно обрабатывать ошибки
+      // в противном случае приложение может упасть
+      // потому что this.getData() шлет запрос на новые данные и не получает их
+      if (response) {
+        await this.getData();
+      } else {
+        // Тут можно как-то информировать пользователя об ошибке
+        console.log('Ошибка! Сервер временно не доступен!');
+      }
   }
 
   onDeletePerson = async (id) => {
@@ -84,23 +116,43 @@ class App extends Component {
 
 
   render() {
-    let {data, term, filter} = this.state;
+    let {data, term, filter, isFetching} = this.state;
     const visibleData = this.filterData(this.onSearch(data, term), filter);
 
     return (
       <div className="app">
-          <AppInfo data={data}/>
-  
-          <div className="search-panel">
-              <SearchPanel  onSearchUpdate={this.onSearchUpdate}/>
-              <AppFilter filter={filter} onFilterUpdate={this.onFilterUpdate}/>
-          </div>
-          
-          <EmployeesList  data={visibleData}
-                          onDeletePerson={this.onDeletePerson}
-                          onAddIncrease={this.onAddIncrease}
-                          />
-          <EmployeesAddForm onAddPerson={this.onAddPerson}/>
+        {/* Проверка загрузки */}
+        {
+          !isFetching ? (
+            <>
+              <AppInfo data={data}/>
+      
+              <div className="search-panel">
+                  <SearchPanel
+                    term={term}
+                    onSearchUpdate={this.onSearchUpdate}
+                  />
+                  <AppFilter filter={filter} onFilterUpdate={this.onFilterUpdate}/>
+              </div>
+              
+              {/* Обработка падения сервера или случая, когда наша база новая и еще пустая */}
+              {/* с этой проверкой можно запускать приложение без сервера и оно больше не падает */}
+              {
+                data?.length > 0 ? (
+                  <EmployeesList  data={visibleData}
+                                  onDeletePerson={this.onDeletePerson}
+                                  onAddIncrease={this.onAddIncrease}
+                                  />
+                ) : (
+                  <h1>Пока что работников нет или сервис не доступен.</h1>
+                )
+              }
+              <EmployeesAddForm onAddPerson={this.onAddPerson}/>
+            </>
+          ) : (
+            <h1>Контент загружается!</h1>
+          )
+        }
       </div>
     );
   }

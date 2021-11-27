@@ -22,6 +22,9 @@ class EmployeesListItem extends Component {
         const {value} = this.state.value;
         const {onAddIncrease, onDeletePerson} = this.props;
 
+        // Есть хорошая маленькая библиотека для таких манипуляций
+        // https://www.npmjs.com/package/classnames
+        // она довольно часто применяется в работе, имеет почти 8 миллионов скачиваний
         let classList = "list-group-item d-flex justify-content-between";
         classList = increase ? classList +=" increase" : classList;
         classList = favourite ? classList +=" like" : classList;
