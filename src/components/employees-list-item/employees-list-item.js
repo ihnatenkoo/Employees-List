@@ -12,7 +12,7 @@ class EmployeesListItem extends Component {
         this.setState({
             value: event.target.value
         });
-        this.props.onAddIncrease(id, {name, salary: event.target.value, favourite, increase})
+        this.props.onChangePerson({name, salary: event.target.value, favourite, increase}, ["PUT", id])
     }
     
 
@@ -20,7 +20,7 @@ class EmployeesListItem extends Component {
     render() {
         const {name, salary, increase, favourite, id} = this.props.person;
         const {value} = this.state.value;
-        const {onAddIncrease, onDeletePerson} = this.props;
+        const {onChangePerson} = this.props;
 
         let classList = "list-group-item d-flex justify-content-between";
         classList = increase ? classList +=" increase" : classList;
@@ -28,7 +28,7 @@ class EmployeesListItem extends Component {
        
         return (
             <li className={classList}>
-                <span   onClick={() => onAddIncrease(id, {name, salary, favourite: !favourite, increase})}
+                <span   onClick={() => onChangePerson({name, salary, favourite: !favourite, increase}, ["PUT", id])}
                         className="list-group-item-label">{name}</span>
                 <input  onChange={this.onChange}                    
                        
@@ -36,14 +36,14 @@ class EmployeesListItem extends Component {
                 <div className='d-flex justify-content-center align-items-center'>
 
                     <button 
-                            onClick={() => onAddIncrease(id, {name, salary, favourite, increase: !increase})}
+                            onClick={() => onChangePerson({name, salary, favourite, increase: !increase}, ["PUT", id])}
                             type="button"
                             className="btn-cookie btn-sm ">
                         <i className="fas fa-cookie"></i>
                     </button>
     
                     <button 
-                            onClick={() => onDeletePerson(id)}
+                            onClick={() => onChangePerson({}, ["DELETE", id])}
                             type="button"
                             className="btn-trash btn-sm ">
                         <i className="fas fa-trash"></i>

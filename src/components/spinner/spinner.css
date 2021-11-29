@@ -1,0 +1,30 @@
+.spinner {
+  padding: 25px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%,-50%, 0);
+  z-index: 2;
+
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 15px 15px 30px rgba(0,0,0, .15);
+}
+
+.spinner__img {
+  display: block;
+
+}
+
+.spinner h2 {
+  padding: 5px 10px;
+  border-radius: 8px;
+  background-color: #3d5a80;
+  color: #fff;
+}

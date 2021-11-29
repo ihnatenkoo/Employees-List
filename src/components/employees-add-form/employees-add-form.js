@@ -16,7 +16,7 @@ class EmployeesAddForm extends Component {
         event.preventDefault();
         const {name, salary} = this.state;
         if (name.length > 2 & !isNaN(salary)) {
-            this.props.onAddPerson({name, salary, increase: false, favourite: false})
+            this.props.onChangePerson({name, salary, increase: false, favourite: false}, ["POST",""])
             this.setState({
                 name:"",
                 salary:""

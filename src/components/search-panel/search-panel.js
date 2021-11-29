@@ -11,13 +11,14 @@ class SearchPanel extends Component {
         this.setState({
             term
         })
-        this.props.onSearchUpdate(term)
+        this.props.onSearchUpdate(e.target.value.toLowerCase())
     }
 
     render() {
+        const {term} = this.props;
         return (
             <input  onChange={this.onChange}
-                    value={this.state.term}
+                    value={term}
                     type="text"
                     className="form-control search-input"
                     placeholder="Найти сотрудника"/>

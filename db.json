@@ -16,7 +16,7 @@
     },
     {
       "name": "Sergey",
-      "salary": "810",
+      "salary": "812",
       "favourite": false,
       "increase": false,
       "id": 3
@@ -38,8 +38,8 @@
     {
       "name": "Maryna",
       "salary": "480",
-      "increase": false,
       "favourite": false,
+      "increase": false,
       "id": 6
     },
     {
@@ -48,6 +48,13 @@
       "favourite": true,
       "increase": false,
       "id": 7
+    },
+    {
+      "name": "Margo",
+      "salary": "750",
+      "favourite": true,
+      "increase": true,
+      "id": 8
     }
   ]
 }

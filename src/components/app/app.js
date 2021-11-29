@@ -5,15 +5,18 @@ import SearchPanel from '../search-panel/search-panel';
 import AppFilter from '../app-filter/app-filter';
 import EmployeesList from '../employees-list/employees-list';
 import EmployeesAddForm from '../employees-add-form/employees-add-form';
+import Spinner from '../spinner/Spinner';
 
 import './app.css';
+
 
 class App extends Component {
 
   state = {
     data: [],
     term: "",
-    filter: "all"
+    filter: "all",
+    isLoading: false
   }
 
   service = new Service();
@@ -24,25 +27,33 @@ class App extends Component {
 
   // ДОБАВЛЕНИЕ УДАЛЕНИЕ ИЗМЕНЕНИЕ
   getData = async () => {
-    const data = await this.service.fetch();
     this.setState({
-        data
+      isLoading: true
     })
+
+    const data = await this.service.fetch();
+    if (data) {
+      this.setState({
+        data,
+        isLoading: false
+      }) 
+    } else {
+      this.setState({
+        data: [],
+        isLoading: false
+      }) 
+      console.log("Запрос на получение данных не сработал.")
+    }
   }
 
-  onAddPerson = async (data) => {
-      await this.service.updateData(data,"POST","");
-      await this.getData();
-  }
+  onChangePerson = async (data, requestParam) => {
+      const response =  await this.service.updateData(data, ...requestParam);
 
-  onDeletePerson = async (id) => {
-      await this.service.updateData({}, "DELETE", id);
-      await this.getData();
-  }
-
-  onAddIncrease = async (id, data) => {
-      await this.service.updateData(data, "PUT", id);
-      await this.getData();
+      if (response) {
+        await this.getData();
+      } else {
+        console.log("Ошибка! Сервер не отвечает...")
+      }
   }
 
 
@@ -84,24 +95,39 @@ class App extends Component {
 
 
   render() {
-    let {data, term, filter} = this.state;
+    let {data, term, filter, isLoading} = this.state;
     const visibleData = this.filterData(this.onSearch(data, term), filter);
+    const spinner = isLoading ? <Spinner/> : null;
 
     return (
-      <div className="app">
-          <AppInfo data={data}/>
-  
-          <div className="search-panel">
-              <SearchPanel  onSearchUpdate={this.onSearchUpdate}/>
-              <AppFilter filter={filter} onFilterUpdate={this.onFilterUpdate}/>
-          </div>
-          
-          <EmployeesList  data={visibleData}
-                          onDeletePerson={this.onDeletePerson}
-                          onAddIncrease={this.onAddIncrease}
-                          />
-          <EmployeesAddForm onAddPerson={this.onAddPerson}/>
-      </div>
+      
+        <div className="app">
+              
+              <AppInfo data={data}/>
+
+              <div className="search-panel">
+                  <SearchPanel
+                    term={term}
+                    onSearchUpdate={this.onSearchUpdate}
+                  />
+                  <AppFilter filter={filter} onFilterUpdate={this.onFilterUpdate}/>
+              </div>
+            
+              {
+                data?.length > 0 ? (
+                  <EmployeesList  data={visibleData}
+                                  onChangePerson={this.onChangePerson}
+                                  />
+                ) : (
+                  <h2 className="empty-list-error">Список пуст или сервис не доступен.</h2>
+                )
+              }
+              <EmployeesAddForm onChangePerson={this.onChangePerson}/>
+
+              {spinner}
+        </div>
+      
+      
     );
   }
   

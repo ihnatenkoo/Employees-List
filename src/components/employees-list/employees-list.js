@@ -3,26 +3,27 @@ import EmployeesListItem from "../employees-list-item/employees-list-item";
 
 import './employees-list.css';
 
-class EmployeesList extends Component {
+const EmployeesList = ({data, onChangePerson}) => (
 
-    render() {
-        const personList = this.props.data.map((person, i) => {
-           return (
-            <EmployeesListItem  person={person} 
-                                key={i}
-                                onDeletePerson={this.props.onDeletePerson}
-                                onAddIncrease={this.props.onAddIncrease}
-                                />
-         )
-        })
-             
-        return (
-            <ul className="app-list list-group">
-               {personList}
-            </ul>
-        )
-    }
+    <ul className="app-list list-group">
+        {data.map((person, i) => {
+            return (
+                <EmployeesListItem  person={person} 
+                                    key={i}
+                                    onChangePerson={onChangePerson}
+                                    />
+            )
+        })}
+    </ul>
+
+)
+
+
+
+            
+        
     
-}
+    
+
 
 export default EmployeesList;
